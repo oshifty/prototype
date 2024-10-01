@@ -13,6 +13,7 @@
 #include "esp_log.h"
 #include "led_strip.h"
 #include "sdkconfig.h"
+#include "mdns.h"
 
 static const char *TAG = "example";
 
@@ -30,6 +31,26 @@ static uint8_t s_led_state = 0;
 #ifdef CONFIG_BLINK_LED_STRIP
 
 static led_strip_handle_t led_strip;
+
+void add_mdns_services()
+{
+    //add our services
+    mdns_service_add(NULL, "_scf", "_tcp", 4284, NULL, 0);
+
+    //NOTE: services must be added before their properties can be set
+    //use custom instance for the web server
+    mdns_service_instance_name_set("_scf", "_tcp", "Espresif ESP32-C6");
+
+    mdns_txt_item_t serviceTxtData[4] = {
+        {"manufacturer","Espresif"},
+        {"model","ESP32-C6"},
+        {"version","0.0.1"},
+        {"serial","123-456-789"}
+    };
+
+    //set txt data for service (will free and replace current data)
+    mdns_service_txt_set("_scf", "_tcp", serviceTxtData, 4);
+}
 
 static void blink_led(void)
 {
