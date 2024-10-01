@@ -7,6 +7,8 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 #include <lwip/netdb.h>
+#include <pb_decode.h>
+#include <pb_encode.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -16,6 +18,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 #include "esp_wifi.h"
+#include "fixture.pb.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
 #include "freertos/task.h"
@@ -202,6 +205,54 @@ void add_mdns_services() {
     mdns_service_txt_set("_scf", "_tcp", serviceTxtData, 4);
 }
 
+void sendHandshakeResponse(int sock) {
+    ResponseMessage response = ResponseMessage_init_zero;
+
+    uint8_t buffer[FIXTURE_PB_H_MAX_SIZE];
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    response.which_response = ResponseMessage_handshake_tag;
+    response.response.handshake.success = true;
+
+    if (!pb_encode(&stream, ResponseMessage_fields, &response)) {
+        ESP_LOGE(TAG, "Error encoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    // send 4 bytes of message length
+    uint8_t len[4];
+    len[0] = stream.bytes_written & 0xFF;
+    len[1] = (stream.bytes_written >> 8) & 0xFF;
+    len[2] = (stream.bytes_written >> 16) & 0xFF;
+    len[3] = (stream.bytes_written >> 24) & 0xFF;
+
+    send(sock, len, sizeof(len), 0);
+
+    // send message
+    send(sock, buffer, stream.bytes_written, 0);
+
+    ESP_LOGI(TAG, "Sent handshake response");
+}
+
+void handleProtobufMessage(uint8_t *rx_buffer_msg, int len, int sock) {
+    pb_istream_t stream = pb_istream_from_buffer(rx_buffer_msg, len);
+
+    CommandMessage message = CommandMessage_init_zero;
+
+    if (!pb_decode(&stream, CommandMessage_fields, &message)) {
+        ESP_LOGE(TAG, "Error decoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    if (message.which_command == CommandMessage_handshake_tag) {
+        ESP_LOGI(TAG, "Received handshake message");
+        sendHandshakeResponse(sock);
+    } else {
+        ESP_LOGE(TAG, "Unknown message type");
+    }
+}
+
 static void tcp_server_task(void *pvParameters) {
     char addr_str[128];
     int addr_family = (int)pvParameters;
@@ -285,7 +336,7 @@ static void tcp_server_task(void *pvParameters) {
             len = (rx_buffer_len[3] << 24) | (rx_buffer_len[2] << 16) | (rx_buffer_len[1] << 8) | rx_buffer_len[0];
 
             if (len > 0) {
-                char *rx_buffer_msg = (char *)malloc(len);
+                uint8_t rx_buffer_msg[len];
                 int success = recv(sock, rx_buffer_msg, sizeof(rx_buffer_len), 0);
                 if (success < 0) {
                     ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
@@ -293,6 +344,7 @@ static void tcp_server_task(void *pvParameters) {
                     ESP_LOGW(TAG, "Connection closed");
                 } else {
                     ESP_LOGI(TAG, "Received %d bytes: %s", len, rx_buffer_msg);
+                    handleProtobufMessage(rx_buffer_msg, len, sock);
                 }
             }
         }
