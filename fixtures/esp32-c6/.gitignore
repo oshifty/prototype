@@ -4,3 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 managed_components
+src/env.h
+src/env.example.h
