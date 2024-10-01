@@ -7,16 +7,16 @@
 #### DNS-SD
 
 All fixtures must advertise their presence using DNS-SD:
-**Name:** `[MANUFACTURER] [MODEL]`
-**Type:** `scf`
-**Port:** `4284`
-**Protocol:** `tcp`
-**TXT:**
 
--   `manufacturer`: `[MANUFACTURER]`
--   `model`: `[MODEL]`
--   `version`: `[VERSION]`
--   `serial`: `[SERIAL]`
+-   **Name:** `[MANUFACTURER] [MODEL]`
+-   **Type:** `scf`
+-   **Port:** `4284`
+-   **Protocol:** `tcp`
+-   **TXT:**
+    -   `manufacturer`: `[MANUFACTURER]`
+    -   `model`: `[MODEL]`
+    -   `version`: `[VERSION]`
+    -   `serial`: `[SERIAL]`
 
 #### Wired Ethernet
 
