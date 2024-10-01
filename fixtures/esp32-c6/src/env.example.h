@@ -1,4 +1,4 @@
-// Copy this file to env.h and replace the values with your own
+// Rename this file to env.h and replace the values with your own
 
 #define CONFIG_ESP_WIFI_SSID "SOME_SSID"
 #define CONFIG_ESP_WIFI_PASSWORD "SOME_PASSWORD"
