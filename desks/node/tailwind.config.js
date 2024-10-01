@@ -13,4 +13,7 @@ export default {
         },
     },
     plugins: [require("@tailwindcss/typography"), daisyui],
+    daisyui: {
+        logs: false,
+    },
 };
