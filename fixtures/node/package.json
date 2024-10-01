@@ -1,0 +1,18 @@
+{
+    "name": "node",
+    "devDependencies": {
+        "@bufbuild/protoc-gen-es": "^2.1.0",
+        "@types/node": "^22.7.4",
+        "tsx": "^4.19.1"
+    },
+    "scripts": {
+        "start": "tsx watch src/index.ts",
+        "protobuf": "buf generate"
+    },
+    "packageManager": "yarn@4.5.0",
+    "dependencies": {
+        "@bufbuild/buf": "^1.43.0",
+        "@bufbuild/protobuf": "^2.1.0",
+        "bonjour-service": "^1.2.1"
+    }
+}

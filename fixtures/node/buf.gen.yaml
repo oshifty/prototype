@@ -1,0 +1,7 @@
+version: v2
+inputs:
+    - directory: ../../protobuf
+plugins:
+    - local: protoc-gen-es
+      opt: target=ts
+      out: src/lib/protobuf
