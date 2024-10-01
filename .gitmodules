@@ -1,0 +1,3 @@
+[submodule "protobuf/nanopb"]
+	path = protobuf/nanopb
+	url = git@github.com:nanopb/nanopb.git

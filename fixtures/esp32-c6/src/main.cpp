@@ -26,6 +26,7 @@
 #include "mdns.h"
 #include "nvs_flash.h"
 #include "sdkconfig.h"
+#include "fixture.pb.h"
 
 #define PORT 4284
 #define KEEPALIVE_IDLE 7200
