@@ -34,7 +34,7 @@ const server = net.createServer((socket) => {
     let dataBuffer = Buffer.alloc(0);
     socket.on("data", (data) => {
         dataBuffer = Buffer.concat([dataBuffer, data]);
-        if (dataBuffer.length >= 4) {
+        while (dataBuffer.length >= 4) {
             const length = dataBuffer.readUInt32LE(0);
             if (dataBuffer.length >= length + 4) {
                 const protobuf = dataBuffer.subarray(4, 4 + length);
@@ -48,6 +48,8 @@ const server = net.createServer((socket) => {
 server.listen(TCP_PORT);
 
 console.log("✅ Ready");
+
+let lampShutterOpen = false;
 
 function handleMessag(message: CommandMessage, client: net.Socket) {
     switch (message.command.case) {
@@ -74,6 +76,55 @@ function handleMessag(message: CommandMessage, client: net.Socket) {
                     },
                 },
             });
+            break;
+        case "getFixtureDefinition":
+            sendMessage(client, {
+                response: {
+                    case: "fixtureDefinition",
+                    value: {
+                        json: JSON.stringify({
+                            emitters: [
+                                {
+                                    name: "LED",
+                                    type: "light",
+                                    attributes: {
+                                        1: { name: "Shutter", type: "boolean" },
+                                    },
+                                },
+                            ],
+                        }),
+                    },
+                },
+            });
+            break;
+        case "getAllAttributeValues":
+            sendMessage(client, {
+                response: {
+                    case: "attributeValues",
+                    value: {
+                        data: [{ attributeId: 1, value: { case: "floatValue", value: lampShutterOpen ? 1 : 0 } }],
+                    },
+                },
+            });
+            break;
+        case "getAttributeValue":
+            if (message.command.value.attributeId === 1) {
+                sendMessage(client, {
+                    response: {
+                        case: "attributeValue",
+                        value: {
+                            attributeId: 1,
+                            value: { case: "floatValue", value: lampShutterOpen ? 1 : 0 },
+                        },
+                    },
+                });
+            }
+            break;
+        case "setAttributeValue":
+            if (message.command.value.data?.attributeId === 1 && message.command.value.data.value.case === "floatValue") {
+                lampShutterOpen = message.command.value.data.value.value === 1;
+                console.log("Lamp shutter is now", lampShutterOpen ? "open 🌞" : "closed 🌚");
+            }
             break;
         default:
             console.error("Not implemented:", message.command);

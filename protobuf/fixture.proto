@@ -56,6 +56,7 @@ message ResponseMessage {
         HandshakeResponse handshake = 4;
         FixtureDefinitionResponse fixtureDefinition = 5;
         AttributeValue attributeValue = 6;
+        AttributeValues attributeValues = 7;
     }
 
     message SetConfigResponse {
@@ -90,6 +91,9 @@ message ResponseMessage {
         string json = 1;
     }
 
+    message AttributeValues {
+        repeated AttributeValue data = 1;
+    }
 }
 
 message AttributeValue {

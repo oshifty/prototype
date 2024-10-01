@@ -23,7 +23,7 @@ export class Fixture {
         let dataBuffer = Buffer.alloc(0) as any;
         this.client.on("data", (data) => {
             dataBuffer = Buffer.concat([dataBuffer, data]);
-            if (dataBuffer.length >= 4) {
+            while (dataBuffer.length >= 4) {
                 const length = dataBuffer.readUInt32LE(0);
                 if (dataBuffer.length >= length + 4) {
                     const protobuf = dataBuffer.subarray(4, 4 + length);
@@ -34,7 +34,6 @@ export class Fixture {
                         if (listener.filter(message)) {
                             listener.callback(message);
                             this.messageListeners = this.messageListeners.filter((l) => l !== listener);
-                            return;
                         }
                     }
                 }
@@ -53,13 +52,28 @@ export class Fixture {
         this.sendMessage({ command: { case: "handshake", value: {} } });
         return this.waitForMessageAndReturn("handshake");
     }
+    public async getDefinition() {
+        this.sendMessage({ command: { case: "getFixtureDefinition", value: {} } });
+        const message = await this.waitForMessageAndReturn("fixtureDefinition");
+        const json = JSON.parse(message.json);
+        return json as {
+            emitters: { name: string; type: string; attributes: Record<string, { name: string; type: string }> }[];
+        };
+    }
+    public getCurrentAttributeValues() {
+        this.sendMessage({ command: { case: "getAllAttributeValues", value: {} } });
+        return this.waitForMessageAndReturn("attributeValues");
+    }
+    public setAttributeValue(attributeId: number, value: number) {
+        this.sendMessage({ command: { case: "setAttributeValue", value: { data: { attributeId, value: { case: "floatValue", value } } } } });
+    }
 
     private waitForMessageAndReturn<T extends ResponseMessage["response"]["case"]>(filter: T): Promise<Clean<Extract<ResponseMessage["response"], { case: T }>["value"]>> {
         return new Promise((resolve) => {
             this.messageListeners.push({
                 filter: (message) => message.response.case === filter,
                 callback: (message) => {
-                    resolve(message.response.value);
+                    resolve(this.clean(message.response.value));
                 },
             });
         }) as any;
@@ -69,6 +83,21 @@ export class Fixture {
         const serialized = toBinary(CommandMessageSchema, create(CommandMessageSchema, message));
         const length = Buffer.alloc(4);
         length.writeUInt32LE(serialized.length, 0);
-        this.client.write(Buffer.concat([length as any, serialized]) as any);
+        const result = Buffer.concat([length as any, serialized]) as any;
+        this.client.write(result);
+    }
+
+    private clean<T extends undefined | Record<string, any>>(obj: T): Clean<T> {
+        if (!obj || typeof obj !== "object") {
+            return obj as any;
+        }
+        if (Array.isArray(obj)) {
+            return obj.map((value) => (typeof value === "object" ? this.clean(value) : value)) as any;
+        }
+        return Object.fromEntries(
+            Object.entries(obj)
+                .filter(([key]) => !key.startsWith("$"))
+                .map(([key, value]) => [key, typeof value === "object" ? this.clean(value) : value])
+        ) as any;
     }
 }

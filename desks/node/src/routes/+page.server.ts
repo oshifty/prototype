@@ -16,13 +16,13 @@ browser.on("down", (service) => {
     devices.splice(index, 1);
 });
 
-const fixtureInstances = new Map<string, Fixture>();
+export const _fixtureInstances = new Map<string, Fixture>();
 
 export const load: PageServerLoad = async () => {
     return {
         fixtures: getFixtures().map((fixture) => ({
             ...fixture,
-            connected: fixtureInstances.has(fixture.ip),
+            connected: _fixtureInstances.has(fixture.ip),
         })),
     };
 };
@@ -31,12 +31,11 @@ export const actions: Actions = {
     connect: async ({ request }) => {
         const ip = (await request.formData()).get("ip") as string;
         const fixture = new Fixture(ip);
-        const info = await fixture.getInfo();
-        fixtureInstances.set(ip, fixture);
-        console.log("Retrieved info of", info.serialNumber);
         const handshake = await fixture.handshake();
         if (handshake.success) {
-            console.log("Handshake successful");
+            _fixtureInstances.set(ip, fixture);
+        } else {
+            console.log("Handshake failed");
         }
     },
 };
