@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+message CommandMessage {
+    oneof command {
+        WifiConfig setWifiConfig = 1;
+        Empty getInfo = 2;
+        Empty getStatus = 3;
+        Empty handshake = 4;
+        Empty getFixtureDefinition = 5;
+
+        GetAttributeValue getAttributeValue = 6;
+        GetAttributeValues getAttributeValues = 7;
+        Empty getAllAttributeValues = 8;
+
+        SetAttributeValue setAttributeValue = 9;
+        SetAttributeValues setAttributeValues = 10;
+    }
+
+    message WifiConfig {
+        string ssid = 1;
+        string password = 2;
+        StaticIpConfig staticIpConfig = 3;
+
+        message StaticIpConfig {
+            string ip = 1;
+            string gateway = 2;
+            string netmask = 3;
+        }
+    }
+
+    message Empty {
+    }
+
+    message GetAttributeValue {
+        int32 attributeId = 1;
+    }
+
+    message GetAttributeValues {
+        repeated int32 attributeIds = 1;
+    }
+
+    message SetAttributeValue {
+        AttributeValue data = 1;
+    }
+
+    message SetAttributeValues {
+        repeated AttributeValue data = 1;
+    }
+}
+
+message ResponseMessage {
+    oneof response {
+        SetConfigResponse setConfigResponse = 1;
+        InfoResponse info = 2;
+        StatusResponse status = 3;
+        HandshakeResponse handshake = 4;
+        FixtureDefinitionResponse fixtureDefinition = 5;
+        AttributeValue attributeValue = 6;
+    }
+
+    message SetConfigResponse {
+        bool success = 1;
+    }
+
+    message InfoResponse {
+        string manufacturer = 1;
+        string model = 2;
+        string serialNumber = 3;
+        SemVer firmwareVersion = 4;
+        SemVer hardwareVersion = 5;
+    }
+
+    message StatusResponse {
+        // enum: OK, WARNING, ERROR
+        StatusCode status = 1;
+
+        enum StatusCode {
+            OK = 0;
+            WARNING = 1;
+            ERROR = 2;
+        }
+    }
+
+
+    message HandshakeResponse {
+        bool success = 1;
+    }
+
+    message FixtureDefinitionResponse {
+        string json = 1;
+    }
+
+}
+
+message AttributeValue {
+    int32 attributeId = 1;
+    oneof value {
+        float floatValue = 2;
+        string stringValue = 3;
+    }
+}
+
+message SemVer {
+    int32 major = 1;
+    int32 minor = 2;
+    int32 patch = 3;
+}
