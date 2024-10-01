@@ -10,7 +10,6 @@
 #include <string.h>
 
 #include "driver/gpio.h"
-#include "env.example.h"
 #include "env.h"
 #include "esp_event.h"
 #include "esp_log.h"
