@@ -30,10 +30,6 @@ typedef struct _CommandMessage_WifiConfig {
     CommandMessage_WifiConfig_StaticIpConfig staticIpConfig;
 } CommandMessage_WifiConfig;
 
-typedef struct _CommandMessage_Empty {
-    char dummy_field;
-} CommandMessage_Empty;
-
 typedef struct _CommandMessage_GetAttributeValue {
     int32_t attributeId;
 } CommandMessage_GetAttributeValue;
@@ -59,20 +55,12 @@ typedef struct _ResponseMessage_HandshakeResponse {
     bool success;
 } ResponseMessage_HandshakeResponse;
 
-typedef struct _ResponseMessage_FixtureDefinitionResponse {
-    pb_callback_t json;
-} ResponseMessage_FixtureDefinitionResponse;
-
-typedef struct _ResponseMessage_AttributeValues {
-    pb_callback_t data;
-} ResponseMessage_AttributeValues;
-
 typedef struct _AttributeValue {
     int32_t attributeId;
     pb_size_t which_value;
     union {
-        float floatValue;
-        pb_callback_t stringValue;
+        int32_t intValue;
+        char stringValue[32];
     } value;
 } AttributeValue;
 
@@ -81,17 +69,26 @@ typedef struct _CommandMessage_SetAttributeValue {
     AttributeValue data;
 } CommandMessage_SetAttributeValue;
 
+typedef struct _ResponseMessage_AttributeValues {
+    pb_size_t data_count;
+    AttributeValue data[3];
+} ResponseMessage_AttributeValues;
+
+typedef struct _Empty {
+    char dummy_field;
+} Empty;
+
 typedef struct _CommandMessage {
     pb_size_t which_command;
     union {
         CommandMessage_WifiConfig setWifiConfig;
-        CommandMessage_Empty getInfo;
-        CommandMessage_Empty getStatus;
-        CommandMessage_Empty handshake;
-        CommandMessage_Empty getFixtureDefinition;
+        Empty getInfo;
+        Empty getStatus;
+        Empty handshake;
+        Empty getFixtureDefinition;
         CommandMessage_GetAttributeValue getAttributeValue;
         CommandMessage_GetAttributeValues getAttributeValues;
-        CommandMessage_Empty getAllAttributeValues;
+        Empty getAllAttributeValues;
         CommandMessage_SetAttributeValue setAttributeValue;
         CommandMessage_SetAttributeValues setAttributeValues;
     } command;
@@ -104,9 +101,9 @@ typedef struct _SemVer {
 } SemVer;
 
 typedef struct _ResponseMessage_InfoResponse {
-    pb_callback_t manufacturer;
-    pb_callback_t model;
-    pb_callback_t serialNumber;
+    char manufacturer[64];
+    char model[64];
+    char serialNumber[32];
     bool has_firmwareVersion;
     SemVer firmwareVersion;
     bool has_hardwareVersion;
@@ -120,7 +117,7 @@ typedef struct _ResponseMessage {
         ResponseMessage_InfoResponse info;
         ResponseMessage_StatusResponse status;
         ResponseMessage_HandshakeResponse handshake;
-        ResponseMessage_FixtureDefinitionResponse fixtureDefinition;
+        Empty fixtureDefinition;
         AttributeValue attributeValue;
         ResponseMessage_AttributeValues attributeValues;
     } response;
@@ -146,7 +143,6 @@ extern "C" {
 
 
 
-
 #define ResponseMessage_StatusResponse_status_ENUMTYPE ResponseMessage_StatusResponse_StatusCode
 
 
@@ -159,36 +155,34 @@ extern "C" {
 #define CommandMessage_init_default              {0, {CommandMessage_WifiConfig_init_default}}
 #define CommandMessage_WifiConfig_init_default   {{{NULL}, NULL}, {{NULL}, NULL}, false, CommandMessage_WifiConfig_StaticIpConfig_init_default}
 #define CommandMessage_WifiConfig_StaticIpConfig_init_default {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define CommandMessage_Empty_init_default        {0}
 #define CommandMessage_GetAttributeValue_init_default {0}
 #define CommandMessage_GetAttributeValues_init_default {{{NULL}, NULL}}
 #define CommandMessage_SetAttributeValue_init_default {false, AttributeValue_init_default}
 #define CommandMessage_SetAttributeValues_init_default {{{NULL}, NULL}}
 #define ResponseMessage_init_default             {0, {ResponseMessage_SetConfigResponse_init_default}}
 #define ResponseMessage_SetConfigResponse_init_default {0}
-#define ResponseMessage_InfoResponse_init_default {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, SemVer_init_default, false, SemVer_init_default}
+#define ResponseMessage_InfoResponse_init_default {"", "", "", false, SemVer_init_default, false, SemVer_init_default}
 #define ResponseMessage_StatusResponse_init_default {_ResponseMessage_StatusResponse_StatusCode_MIN}
 #define ResponseMessage_HandshakeResponse_init_default {0}
-#define ResponseMessage_FixtureDefinitionResponse_init_default {{{NULL}, NULL}}
-#define ResponseMessage_AttributeValues_init_default {{{NULL}, NULL}}
+#define ResponseMessage_AttributeValues_init_default {0, {AttributeValue_init_default, AttributeValue_init_default, AttributeValue_init_default}}
 #define AttributeValue_init_default              {0, 0, {0}}
+#define Empty_init_default                       {0}
 #define SemVer_init_default                      {0, 0, 0}
 #define CommandMessage_init_zero                 {0, {CommandMessage_WifiConfig_init_zero}}
 #define CommandMessage_WifiConfig_init_zero      {{{NULL}, NULL}, {{NULL}, NULL}, false, CommandMessage_WifiConfig_StaticIpConfig_init_zero}
 #define CommandMessage_WifiConfig_StaticIpConfig_init_zero {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}}
-#define CommandMessage_Empty_init_zero           {0}
 #define CommandMessage_GetAttributeValue_init_zero {0}
 #define CommandMessage_GetAttributeValues_init_zero {{{NULL}, NULL}}
 #define CommandMessage_SetAttributeValue_init_zero {false, AttributeValue_init_zero}
 #define CommandMessage_SetAttributeValues_init_zero {{{NULL}, NULL}}
 #define ResponseMessage_init_zero                {0, {ResponseMessage_SetConfigResponse_init_zero}}
 #define ResponseMessage_SetConfigResponse_init_zero {0}
-#define ResponseMessage_InfoResponse_init_zero   {{{NULL}, NULL}, {{NULL}, NULL}, {{NULL}, NULL}, false, SemVer_init_zero, false, SemVer_init_zero}
+#define ResponseMessage_InfoResponse_init_zero   {"", "", "", false, SemVer_init_zero, false, SemVer_init_zero}
 #define ResponseMessage_StatusResponse_init_zero {_ResponseMessage_StatusResponse_StatusCode_MIN}
 #define ResponseMessage_HandshakeResponse_init_zero {0}
-#define ResponseMessage_FixtureDefinitionResponse_init_zero {{{NULL}, NULL}}
-#define ResponseMessage_AttributeValues_init_zero {{{NULL}, NULL}}
+#define ResponseMessage_AttributeValues_init_zero {0, {AttributeValue_init_zero, AttributeValue_init_zero, AttributeValue_init_zero}}
 #define AttributeValue_init_zero                 {0, 0, {0}}
+#define Empty_init_zero                          {0}
 #define SemVer_init_zero                         {0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -204,12 +198,11 @@ extern "C" {
 #define ResponseMessage_SetConfigResponse_success_tag 1
 #define ResponseMessage_StatusResponse_status_tag 1
 #define ResponseMessage_HandshakeResponse_success_tag 1
-#define ResponseMessage_FixtureDefinitionResponse_json_tag 1
-#define ResponseMessage_AttributeValues_data_tag 1
 #define AttributeValue_attributeId_tag           1
-#define AttributeValue_floatValue_tag            2
+#define AttributeValue_intValue_tag              2
 #define AttributeValue_stringValue_tag           3
 #define CommandMessage_SetAttributeValue_data_tag 1
+#define ResponseMessage_AttributeValues_data_tag 1
 #define CommandMessage_setWifiConfig_tag         1
 #define CommandMessage_getInfo_tag               2
 #define CommandMessage_getStatus_tag             3
@@ -251,13 +244,13 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (command,setAttributeValues,command.setAttrib
 #define CommandMessage_CALLBACK NULL
 #define CommandMessage_DEFAULT NULL
 #define CommandMessage_command_setWifiConfig_MSGTYPE CommandMessage_WifiConfig
-#define CommandMessage_command_getInfo_MSGTYPE CommandMessage_Empty
-#define CommandMessage_command_getStatus_MSGTYPE CommandMessage_Empty
-#define CommandMessage_command_handshake_MSGTYPE CommandMessage_Empty
-#define CommandMessage_command_getFixtureDefinition_MSGTYPE CommandMessage_Empty
+#define CommandMessage_command_getInfo_MSGTYPE Empty
+#define CommandMessage_command_getStatus_MSGTYPE Empty
+#define CommandMessage_command_handshake_MSGTYPE Empty
+#define CommandMessage_command_getFixtureDefinition_MSGTYPE Empty
 #define CommandMessage_command_getAttributeValue_MSGTYPE CommandMessage_GetAttributeValue
 #define CommandMessage_command_getAttributeValues_MSGTYPE CommandMessage_GetAttributeValues
-#define CommandMessage_command_getAllAttributeValues_MSGTYPE CommandMessage_Empty
+#define CommandMessage_command_getAllAttributeValues_MSGTYPE Empty
 #define CommandMessage_command_setAttributeValue_MSGTYPE CommandMessage_SetAttributeValue
 #define CommandMessage_command_setAttributeValues_MSGTYPE CommandMessage_SetAttributeValues
 
@@ -275,11 +268,6 @@ X(a, CALLBACK, SINGULAR, STRING,   gateway,           2) \
 X(a, CALLBACK, SINGULAR, STRING,   netmask,           3)
 #define CommandMessage_WifiConfig_StaticIpConfig_CALLBACK pb_default_field_callback
 #define CommandMessage_WifiConfig_StaticIpConfig_DEFAULT NULL
-
-#define CommandMessage_Empty_FIELDLIST(X, a) \
-
-#define CommandMessage_Empty_CALLBACK NULL
-#define CommandMessage_Empty_DEFAULT NULL
 
 #define CommandMessage_GetAttributeValue_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    attributeId,       1)
@@ -317,7 +305,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (response,attributeValues,response.attributeV
 #define ResponseMessage_response_info_MSGTYPE ResponseMessage_InfoResponse
 #define ResponseMessage_response_status_MSGTYPE ResponseMessage_StatusResponse
 #define ResponseMessage_response_handshake_MSGTYPE ResponseMessage_HandshakeResponse
-#define ResponseMessage_response_fixtureDefinition_MSGTYPE ResponseMessage_FixtureDefinitionResponse
+#define ResponseMessage_response_fixtureDefinition_MSGTYPE Empty
 #define ResponseMessage_response_attributeValue_MSGTYPE AttributeValue
 #define ResponseMessage_response_attributeValues_MSGTYPE ResponseMessage_AttributeValues
 
@@ -327,12 +315,12 @@ X(a, STATIC,   SINGULAR, BOOL,     success,           1)
 #define ResponseMessage_SetConfigResponse_DEFAULT NULL
 
 #define ResponseMessage_InfoResponse_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   manufacturer,      1) \
-X(a, CALLBACK, SINGULAR, STRING,   model,             2) \
-X(a, CALLBACK, SINGULAR, STRING,   serialNumber,      3) \
+X(a, STATIC,   SINGULAR, STRING,   manufacturer,      1) \
+X(a, STATIC,   SINGULAR, STRING,   model,             2) \
+X(a, STATIC,   SINGULAR, STRING,   serialNumber,      3) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  firmwareVersion,   4) \
 X(a, STATIC,   OPTIONAL, MESSAGE,  hardwareVersion,   5)
-#define ResponseMessage_InfoResponse_CALLBACK pb_default_field_callback
+#define ResponseMessage_InfoResponse_CALLBACK NULL
 #define ResponseMessage_InfoResponse_DEFAULT NULL
 #define ResponseMessage_InfoResponse_firmwareVersion_MSGTYPE SemVer
 #define ResponseMessage_InfoResponse_hardwareVersion_MSGTYPE SemVer
@@ -347,23 +335,23 @@ X(a, STATIC,   SINGULAR, BOOL,     success,           1)
 #define ResponseMessage_HandshakeResponse_CALLBACK NULL
 #define ResponseMessage_HandshakeResponse_DEFAULT NULL
 
-#define ResponseMessage_FixtureDefinitionResponse_FIELDLIST(X, a) \
-X(a, CALLBACK, SINGULAR, STRING,   json,              1)
-#define ResponseMessage_FixtureDefinitionResponse_CALLBACK pb_default_field_callback
-#define ResponseMessage_FixtureDefinitionResponse_DEFAULT NULL
-
 #define ResponseMessage_AttributeValues_FIELDLIST(X, a) \
-X(a, CALLBACK, REPEATED, MESSAGE,  data,              1)
-#define ResponseMessage_AttributeValues_CALLBACK pb_default_field_callback
+X(a, STATIC,   REPEATED, MESSAGE,  data,              1)
+#define ResponseMessage_AttributeValues_CALLBACK NULL
 #define ResponseMessage_AttributeValues_DEFAULT NULL
 #define ResponseMessage_AttributeValues_data_MSGTYPE AttributeValue
 
 #define AttributeValue_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    attributeId,       1) \
-X(a, STATIC,   ONEOF,    FLOAT,    (value,floatValue,value.floatValue),   2) \
-X(a, CALLBACK, ONEOF,    STRING,   (value,stringValue,value.stringValue),   3)
-#define AttributeValue_CALLBACK pb_default_field_callback
+X(a, STATIC,   ONEOF,    INT32,    (value,intValue,value.intValue),   2) \
+X(a, STATIC,   ONEOF,    STRING,   (value,stringValue,value.stringValue),   3)
+#define AttributeValue_CALLBACK NULL
 #define AttributeValue_DEFAULT NULL
+
+#define Empty_FIELDLIST(X, a) \
+
+#define Empty_CALLBACK NULL
+#define Empty_DEFAULT NULL
 
 #define SemVer_FIELDLIST(X, a) \
 X(a, STATIC,   SINGULAR, INT32,    major,             1) \
@@ -375,7 +363,6 @@ X(a, STATIC,   SINGULAR, INT32,    patch,             3)
 extern const pb_msgdesc_t CommandMessage_msg;
 extern const pb_msgdesc_t CommandMessage_WifiConfig_msg;
 extern const pb_msgdesc_t CommandMessage_WifiConfig_StaticIpConfig_msg;
-extern const pb_msgdesc_t CommandMessage_Empty_msg;
 extern const pb_msgdesc_t CommandMessage_GetAttributeValue_msg;
 extern const pb_msgdesc_t CommandMessage_GetAttributeValues_msg;
 extern const pb_msgdesc_t CommandMessage_SetAttributeValue_msg;
@@ -385,16 +372,15 @@ extern const pb_msgdesc_t ResponseMessage_SetConfigResponse_msg;
 extern const pb_msgdesc_t ResponseMessage_InfoResponse_msg;
 extern const pb_msgdesc_t ResponseMessage_StatusResponse_msg;
 extern const pb_msgdesc_t ResponseMessage_HandshakeResponse_msg;
-extern const pb_msgdesc_t ResponseMessage_FixtureDefinitionResponse_msg;
 extern const pb_msgdesc_t ResponseMessage_AttributeValues_msg;
 extern const pb_msgdesc_t AttributeValue_msg;
+extern const pb_msgdesc_t Empty_msg;
 extern const pb_msgdesc_t SemVer_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define CommandMessage_fields &CommandMessage_msg
 #define CommandMessage_WifiConfig_fields &CommandMessage_WifiConfig_msg
 #define CommandMessage_WifiConfig_StaticIpConfig_fields &CommandMessage_WifiConfig_StaticIpConfig_msg
-#define CommandMessage_Empty_fields &CommandMessage_Empty_msg
 #define CommandMessage_GetAttributeValue_fields &CommandMessage_GetAttributeValue_msg
 #define CommandMessage_GetAttributeValues_fields &CommandMessage_GetAttributeValues_msg
 #define CommandMessage_SetAttributeValue_fields &CommandMessage_SetAttributeValue_msg
@@ -404,9 +390,9 @@ extern const pb_msgdesc_t SemVer_msg;
 #define ResponseMessage_InfoResponse_fields &ResponseMessage_InfoResponse_msg
 #define ResponseMessage_StatusResponse_fields &ResponseMessage_StatusResponse_msg
 #define ResponseMessage_HandshakeResponse_fields &ResponseMessage_HandshakeResponse_msg
-#define ResponseMessage_FixtureDefinitionResponse_fields &ResponseMessage_FixtureDefinitionResponse_msg
 #define ResponseMessage_AttributeValues_fields &ResponseMessage_AttributeValues_msg
 #define AttributeValue_fields &AttributeValue_msg
+#define Empty_fields &Empty_msg
 #define SemVer_fields &SemVer_msg
 
 /* Maximum encoded size of messages (where known) */
@@ -414,19 +400,18 @@ extern const pb_msgdesc_t SemVer_msg;
 /* CommandMessage_WifiConfig_size depends on runtime parameters */
 /* CommandMessage_WifiConfig_StaticIpConfig_size depends on runtime parameters */
 /* CommandMessage_GetAttributeValues_size depends on runtime parameters */
-/* CommandMessage_SetAttributeValue_size depends on runtime parameters */
 /* CommandMessage_SetAttributeValues_size depends on runtime parameters */
-/* ResponseMessage_size depends on runtime parameters */
-/* ResponseMessage_InfoResponse_size depends on runtime parameters */
-/* ResponseMessage_FixtureDefinitionResponse_size depends on runtime parameters */
-/* ResponseMessage_AttributeValues_size depends on runtime parameters */
-/* AttributeValue_size depends on runtime parameters */
-#define CommandMessage_Empty_size                0
+#define AttributeValue_size                      44
 #define CommandMessage_GetAttributeValue_size    11
-#define FIXTURE_PB_H_MAX_SIZE                    SemVer_size
+#define CommandMessage_SetAttributeValue_size    46
+#define Empty_size                               0
+#define FIXTURE_PB_H_MAX_SIZE                    ResponseMessage_size
+#define ResponseMessage_AttributeValues_size     138
 #define ResponseMessage_HandshakeResponse_size   2
+#define ResponseMessage_InfoResponse_size        233
 #define ResponseMessage_SetConfigResponse_size   2
 #define ResponseMessage_StatusResponse_size      2
+#define ResponseMessage_size                     236
 #define SemVer_size                              33
 
 #ifdef __cplusplus

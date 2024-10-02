@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <string>
+
 #include "driver/gpio.h"
 #include "env.h"
 #include "esp_event.h"
@@ -34,6 +36,12 @@
 #define KEEPALIVE_IDLE 7200
 #define KEEPALIVE_INTERVAL 75
 #define KEEPALIVE_COUNT 9
+
+uint8_t red = 16;
+uint8_t green = 0;
+uint8_t blue = 0;
+
+static led_strip_handle_t led_strip;
 
 static const char *TAG = "example";
 
@@ -173,6 +181,10 @@ void wifi_init_sta(void) {
     }
 }
 
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 void start_mdns_service() {
     // initialize mDNS service
     esp_err_t err = mdns_init();
@@ -235,6 +247,165 @@ void sendHandshakeResponse(int sock) {
     ESP_LOGI(TAG, "Sent handshake response");
 }
 
+void sendInfoResponse(int sock) {
+    ResponseMessage response = ResponseMessage_init_zero;
+
+    uint8_t buffer[FIXTURE_PB_H_MAX_SIZE];
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    response.which_response = ResponseMessage_info_tag;
+    strcpy(response.response.info.manufacturer, "Espressif");
+    strcpy(response.response.info.model, "ESP32-C6");
+    strcpy(response.response.info.serialNumber, "123-456-789");
+    response.response.info.firmwareVersion.major = 0;
+    response.response.info.firmwareVersion.minor = 0;
+    response.response.info.firmwareVersion.patch = 1;
+
+    if (!pb_encode(&stream, ResponseMessage_fields, &response)) {
+        ESP_LOGE(TAG, "Error encoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    // send 4 bytes of message length
+    uint8_t len[4];
+    len[0] = stream.bytes_written & 0xFF;
+    len[1] = (stream.bytes_written >> 8) & 0xFF;
+    len[2] = (stream.bytes_written >> 16) & 0xFF;
+    len[3] = (stream.bytes_written >> 24) & 0xFF;
+
+    send(sock, len, sizeof(len), 0);
+
+    // send message
+    send(sock, buffer, stream.bytes_written, 0);
+
+    ESP_LOGI(TAG, "Sent info response");
+}
+
+void sendFixtureDefinition(int sock) {
+    std::string fixtureDefinition = "{\"emitters\":[{\"name\":\"LED\",\"type\":\"light\",\"attributes\":{\"1\":{\"name\":\"Red\",\"type\":\"int\"},\"2\":{\"name\":\"Green\",\"type\":\"int\"},\"3\":{\"name\":\"Blue\",\"type\":\"int\"}}}]}";
+
+    ResponseMessage response = ResponseMessage_init_zero;
+
+    uint8_t buffer[FIXTURE_PB_H_MAX_SIZE];
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    response.which_response = ResponseMessage_fixtureDefinition_tag;
+
+    if (!pb_encode(&stream, ResponseMessage_fields, &response)) {
+        ESP_LOGE(TAG, "Error encoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    // send 4 bytes of message length
+    uint8_t len[4];
+    len[0] = stream.bytes_written & 0xFF;
+    len[1] = (stream.bytes_written >> 8) & 0xFF;
+    len[2] = (stream.bytes_written >> 16) & 0xFF;
+    len[3] = (stream.bytes_written >> 24) & 0xFF;
+
+    send(sock, len, sizeof(len), 0);
+
+    // send message
+    send(sock, buffer, stream.bytes_written, 0);
+
+    ESP_LOGI(TAG, "Sent fixture definition response");
+
+    // send length of fixture definition
+    uint8_t lenFixture[4];
+    lenFixture[0] = fixtureDefinition.length() & 0xFF;
+    lenFixture[1] = (fixtureDefinition.length() >> 8) & 0xFF;
+    lenFixture[2] = (fixtureDefinition.length() >> 16) & 0xFF;
+    lenFixture[3] = (fixtureDefinition.length() >> 24) & 0xFF;
+
+    send(sock, lenFixture, sizeof(lenFixture), 0);
+
+    // send fixture definition
+    send(sock, fixtureDefinition.c_str(), fixtureDefinition.length(), 0);
+
+    ESP_LOGI(TAG, "Sent fixture definition");
+}
+
+int32_t mapTo32Bit(uint8_t number) {
+    return map(number, 0, 255, 0, 255);
+}
+
+uint8_t mapTo8Bit(int32_t number) {
+    return map(number, 0, 255, 0, 255);
+}
+
+void sendAllAttributeValues(int sock) {
+    ResponseMessage response = ResponseMessage_init_zero;
+
+    uint8_t buffer[FIXTURE_PB_H_MAX_SIZE];
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    response.which_response = ResponseMessage_attributeValues_tag;
+    response.response.attributeValues.data_count = 3;
+    response.response.attributeValues.data[0].attributeId = 1;
+    response.response.attributeValues.data[0].which_value = AttributeValue_intValue_tag;
+    response.response.attributeValues.data[0].value.intValue = mapTo32Bit(red);
+    response.response.attributeValues.data[1].attributeId = 2;
+    response.response.attributeValues.data[1].which_value = AttributeValue_intValue_tag;
+    response.response.attributeValues.data[1].value.intValue = mapTo32Bit(green);
+    response.response.attributeValues.data[2].attributeId = 3;
+    response.response.attributeValues.data[2].which_value = AttributeValue_intValue_tag;
+    response.response.attributeValues.data[2].value.intValue = mapTo32Bit(blue);
+
+    if (!pb_encode(&stream, ResponseMessage_fields, &response)) {
+        ESP_LOGE(TAG, "Error encoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    // send 4 bytes of message length
+    uint8_t len[4];
+    len[0] = stream.bytes_written & 0xFF;
+    len[1] = (stream.bytes_written >> 8) & 0xFF;
+    len[2] = (stream.bytes_written >> 16) & 0xFF;
+    len[3] = (stream.bytes_written >> 24) & 0xFF;
+
+    send(sock, len, sizeof(len), 0);
+
+    // send message
+    send(sock, buffer, stream.bytes_written, 0);
+
+    ESP_LOGI(TAG, "Sent all attribute values");
+}
+
+void sendAttributeValue(int sock, int attributeId, int value) {
+    ResponseMessage response = ResponseMessage_init_zero;
+
+    uint8_t buffer[FIXTURE_PB_H_MAX_SIZE];
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+
+    response.which_response = ResponseMessage_attributeValue_tag;
+    response.response.attributeValue.attributeId = attributeId;
+    response.response.attributeValue.which_value = AttributeValue_intValue_tag;
+    response.response.attributeValue.value.intValue = mapTo32Bit(value);
+
+    if (!pb_encode(&stream, ResponseMessage_fields, &response)) {
+        ESP_LOGE(TAG, "Error encoding protobuf message: %s", PB_GET_ERROR(&stream));
+        return;
+    }
+
+    // send 4 bytes of message length
+    uint8_t len[4];
+    len[0] = stream.bytes_written & 0xFF;
+    len[1] = (stream.bytes_written >> 8) & 0xFF;
+    len[2] = (stream.bytes_written >> 16) & 0xFF;
+    len[3] = (stream.bytes_written >> 24) & 0xFF;
+
+    send(sock, len, sizeof(len), 0);
+
+    // send message
+    send(sock, buffer, stream.bytes_written, 0);
+
+    ESP_LOGI(TAG, "Sent attribute value");
+}
+
 void handleProtobufMessage(uint8_t *rx_buffer_msg, int len, int sock) {
     pb_istream_t stream = pb_istream_from_buffer(rx_buffer_msg, len);
 
@@ -248,6 +419,42 @@ void handleProtobufMessage(uint8_t *rx_buffer_msg, int len, int sock) {
     if (message.which_command == CommandMessage_handshake_tag) {
         ESP_LOGI(TAG, "Received handshake message");
         sendHandshakeResponse(sock);
+    } else if (message.which_command == CommandMessage_getInfo_tag) {
+        ESP_LOGI(TAG, "Received get info message");
+        sendInfoResponse(sock);
+    } else if (message.which_command == CommandMessage_getFixtureDefinition_tag) {
+        ESP_LOGI(TAG, "Received get fixture definition message");
+        sendFixtureDefinition(sock);
+    } else if (message.which_command == CommandMessage_getAllAttributeValues_tag) {
+        ESP_LOGI(TAG, "Received get all attribute values message");
+        sendAllAttributeValues(sock);
+    } else if (message.which_command == CommandMessage_getAttributeValue_tag) {
+        ESP_LOGI(TAG, "Received get attribute value message");
+
+        if (message.command.getAttributeValue.attributeId == 1) {
+            sendAttributeValue(sock, 1, red);
+        } else if (message.command.getAttributeValue.attributeId == 2) {
+            sendAttributeValue(sock, 2, green);
+        } else if (message.command.getAttributeValue.attributeId == 3) {
+            sendAttributeValue(sock, 3, blue);
+        }
+    } else if (message.which_command == CommandMessage_setAttributeValue_tag) {
+        ESP_LOGI(TAG, "Received set attribute value message");
+
+        if (message.command.setAttributeValue.has_data) {
+            if (message.command.setAttributeValue.data.which_value == AttributeValue_intValue_tag) {
+                ESP_LOGI(TAG, "Attribute ID: %lx, Value: %lx", message.command.setAttributeValue.data.attributeId, message.command.setAttributeValue.data.value.intValue);
+                if (message.command.setAttributeValue.data.attributeId == 1) {
+                    red = mapTo8Bit(message.command.setAttributeValue.data.value.intValue);
+                } else if (message.command.setAttributeValue.data.attributeId == 2) {
+                    green = mapTo8Bit(message.command.setAttributeValue.data.value.intValue);
+                } else if (message.command.setAttributeValue.data.attributeId == 3) {
+                    blue = mapTo8Bit(message.command.setAttributeValue.data.value.intValue);
+                }
+                led_strip_set_pixel(led_strip, 0, red, green, blue);
+                led_strip_refresh(led_strip);
+            }
+        }
     } else {
         ESP_LOGE(TAG, "Unknown message type");
     }
@@ -323,28 +530,41 @@ static void tcp_server_task(void *pvParameters) {
 
         ESP_LOGI(TAG, "Socket accepted ip address: %s", addr_str);
 
-        // receive protobuf message length
-        char rx_buffer_len[4];
-        int success = recv(sock, rx_buffer_len, sizeof(rx_buffer_len), 0);
+        while (1) {
+            // receive protobuf message length
+            char rx_buffer_len[4];
+            int success = recv(sock, rx_buffer_len, sizeof(rx_buffer_len), 0);
 
-        if (success < 0) {
-            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
-        } else if (success == 0) {
-            ESP_LOGW(TAG, "Connection closed");
-        } else {
-            int len = 0;
-            len = (rx_buffer_len[3] << 24) | (rx_buffer_len[2] << 16) | (rx_buffer_len[1] << 8) | rx_buffer_len[0];
+            ESP_LOGI(TAG, "Received length: %d", success);
+            ESP_LOG_BUFFER_HEXDUMP(TAG, rx_buffer_len, sizeof(rx_buffer_len), ESP_LOG_INFO);
 
-            if (len > 0) {
-                uint8_t rx_buffer_msg[len];
-                int success = recv(sock, rx_buffer_msg, sizeof(rx_buffer_len), 0);
-                if (success < 0) {
-                    ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
-                } else if (success == 0) {
-                    ESP_LOGW(TAG, "Connection closed");
-                } else {
-                    ESP_LOGI(TAG, "Received %d bytes: %s", len, rx_buffer_msg);
-                    handleProtobufMessage(rx_buffer_msg, len, sock);
+            if (success < 0) {
+                ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+                break;
+            } else if (success == 0) {
+                ESP_LOGW(TAG, "Connection closed");
+                break;
+            } else {
+                int len = 0;
+                len = (rx_buffer_len[3] << 24) | (rx_buffer_len[2] << 16) | (rx_buffer_len[1] << 8) | rx_buffer_len[0];
+
+                if (len > 0) {
+                    uint8_t rx_buffer_msg[len];
+                    int success = recv(sock, rx_buffer_msg, sizeof(rx_buffer_msg), 0);
+
+                    ESP_LOGI(TAG, "Received data %d", success);
+                    ESP_LOG_BUFFER_HEXDUMP(TAG, rx_buffer_msg, sizeof(rx_buffer_msg), ESP_LOG_INFO);
+
+                    if (success < 0) {
+                        ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+                        break;
+                    } else if (success == 0) {
+                        ESP_LOGW(TAG, "Connection closed");
+                        break;
+                    } else {
+                        ESP_LOGI(TAG, "Received %d bytes: %s", len, rx_buffer_msg);
+                        handleProtobufMessage(rx_buffer_msg, len, sock);
+                    }
                 }
             }
         }
@@ -361,7 +581,7 @@ CLEAN_UP:
 /* Use project configuration menu (idf.py menuconfig) to choose the GPIO to blink,
    or you can edit the following line and set a number here.
 */
-#define CONFIG_BLINK_PERIOD 1000
+#define CONFIG_REFRESH_PERIOD 10
 #define CONFIG_BLINK_GPIO GPIO_NUM_8
 #define BLINK_GPIO GPIO_NUM_8
 #define CONFIG_BLINK_LED_STRIP 1
@@ -370,8 +590,6 @@ CLEAN_UP:
 static uint8_t s_led_state = 0;
 
 #ifdef CONFIG_BLINK_LED_STRIP
-
-static led_strip_handle_t led_strip;
 
 static void blink_led(void) {
     /* If the addressable LED is enabled */
@@ -455,10 +673,11 @@ extern "C" void app_main(void) {
     configure_led();
 
     while (1) {
-        ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
-        blink_led();
-        /* Toggle the LED state */
-        s_led_state = !s_led_state;
-        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        // ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
+        // blink_led();
+        // /* Toggle the LED state */
+        // s_led_state = !s_led_state;
+
+        vTaskDelay(CONFIG_REFRESH_PERIOD / portTICK_PERIOD_MS);
     }
 }

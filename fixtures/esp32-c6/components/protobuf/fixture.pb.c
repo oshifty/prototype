@@ -15,9 +15,6 @@ PB_BIND(CommandMessage_WifiConfig, CommandMessage_WifiConfig, AUTO)
 PB_BIND(CommandMessage_WifiConfig_StaticIpConfig, CommandMessage_WifiConfig_StaticIpConfig, AUTO)
 
 
-PB_BIND(CommandMessage_Empty, CommandMessage_Empty, AUTO)
-
-
 PB_BIND(CommandMessage_GetAttributeValue, CommandMessage_GetAttributeValue, AUTO)
 
 
@@ -45,13 +42,13 @@ PB_BIND(ResponseMessage_StatusResponse, ResponseMessage_StatusResponse, AUTO)
 PB_BIND(ResponseMessage_HandshakeResponse, ResponseMessage_HandshakeResponse, AUTO)
 
 
-PB_BIND(ResponseMessage_FixtureDefinitionResponse, ResponseMessage_FixtureDefinitionResponse, AUTO)
-
-
 PB_BIND(ResponseMessage_AttributeValues, ResponseMessage_AttributeValues, AUTO)
 
 
 PB_BIND(AttributeValue, AttributeValue, AUTO)
+
+
+PB_BIND(Empty, Empty, AUTO)
 
 
 PB_BIND(SemVer, SemVer, AUTO)
