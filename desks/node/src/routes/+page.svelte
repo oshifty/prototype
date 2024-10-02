@@ -37,7 +37,7 @@
                             <button type="submit" class="btn">Connect 🔌</button>
                         </form>
                     {:else}
-                        <a class="btn" href="/fixtures/{fixture.ip}">Control 💡</a>
+                        <a class="btn" href="/fixtures/{fixture.ip}" data-sveltekit-preload-data="off">Control 💡</a>
                     {/if}
                 </td>
             </tr>

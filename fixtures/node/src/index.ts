@@ -51,7 +51,7 @@ console.log("✅ Ready");
 
 let lampShutterOpen = false;
 
-function handleMessag(message: CommandMessage, client: net.Socket) {
+async function handleMessag(message: CommandMessage, client: net.Socket) {
     switch (message.command.case) {
         case "getInfo":
             sendMessage(client, {
@@ -78,31 +78,28 @@ function handleMessag(message: CommandMessage, client: net.Socket) {
             });
             break;
         case "getFixtureDefinition":
-            sendMessage(client, {
-                response: {
-                    case: "fixtureDefinition",
-                    value: {
-                        json: JSON.stringify({
-                            emitters: [
-                                {
-                                    name: "LED",
-                                    type: "light",
-                                    attributes: {
-                                        1: { name: "Shutter", type: "boolean" },
-                                    },
-                                },
-                            ],
-                        }),
-                    },
-                },
-            });
+            const json = Buffer.from(
+                JSON.stringify({
+                    emitters: [
+                        {
+                            name: "LED",
+                            type: "light",
+                            attributes: {
+                                1: { name: "Shutter", type: "boolean" },
+                            },
+                        },
+                    ],
+                })
+            );
+            sendMessage(client, { response: { case: "fixtureDefinition", value: {} } });
+            sendBuffer(client, json);
             break;
         case "getAllAttributeValues":
             sendMessage(client, {
                 response: {
                     case: "attributeValues",
                     value: {
-                        data: [{ attributeId: 1, value: { case: "floatValue", value: lampShutterOpen ? 1 : 0 } }],
+                        data: [{ attributeId: 1, value: { case: "intValue", value: lampShutterOpen ? 1 : 0 } }],
                     },
                 },
             });
@@ -114,14 +111,14 @@ function handleMessag(message: CommandMessage, client: net.Socket) {
                         case: "attributeValue",
                         value: {
                             attributeId: 1,
-                            value: { case: "floatValue", value: lampShutterOpen ? 1 : 0 },
+                            value: { case: "intValue", value: lampShutterOpen ? 1 : 0 },
                         },
                     },
                 });
             }
             break;
         case "setAttributeValue":
-            if (message.command.value.data?.attributeId === 1 && message.command.value.data.value.case === "floatValue") {
+            if (message.command.value.data?.attributeId === 1 && message.command.value.data.value.case === "intValue") {
                 lampShutterOpen = message.command.value.data.value.value === 1;
                 console.log("Lamp shutter is now", lampShutterOpen ? "open 🌞" : "closed 🌚");
             }
@@ -136,4 +133,10 @@ function sendMessage(socket: net.Socket, message: Parameters<typeof create<typeo
     const length = Buffer.alloc(4);
     length.writeUInt32LE(serialized.length, 0);
     socket.write(Buffer.concat([length, serialized]));
+}
+
+function sendBuffer(socket: net.Socket, buffer: Buffer) {
+    const length = Buffer.alloc(4);
+    length.writeUInt32LE(buffer.length, 0);
+    socket.write(Buffer.concat([length, buffer]));
 }

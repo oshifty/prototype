@@ -8,6 +8,10 @@ type Listener = {
     callback: (message: ResponseMessage) => void;
 };
 
+type WithoutNeverProperties<T> = {
+    [K in keyof T as T[K] extends never ? never : K]: T[K];
+};
+
 // remove all properties starting with "$"
 type Clean<T> = {
     [K in keyof T as K extends `$${string}` ? never : K]: T[K];
@@ -16,6 +20,8 @@ type Clean<T> = {
 export class Fixture {
     private client: net.Socket;
     private messageListeners: Listener[] = [];
+    private blobListener: ((buffer: Buffer) => void) | null = null;
+    private messageQueue: Buffer[] = [];
 
     constructor(public ip: string) {
         this.client = new net.Socket();
@@ -28,20 +34,37 @@ export class Fixture {
                 if (dataBuffer.length >= length + 4) {
                     const protobuf = dataBuffer.subarray(4, 4 + length);
                     dataBuffer = dataBuffer.subarray(4 + length);
-                    const message = fromBinary(ResponseMessageSchema, protobuf);
-
-                    for (const listener of this.messageListeners) {
-                        if (listener.filter(message)) {
-                            listener.callback(message);
-                            this.messageListeners = this.messageListeners.filter((l) => l !== listener);
-                        }
-                    }
+                    this.messageQueue.push(protobuf);
                 }
             }
+            this.handleNextQueueMessage();
         });
         this.client.on("error", (e) => {
             console.log("An error occurred", e);
         });
+    }
+
+    private handleNextQueueMessage() {
+        if (this.messageQueue.length === 0) {
+            return;
+        }
+        const messageBuffer = this.messageQueue.shift()!;
+        if (this.blobListener) {
+            this.blobListener(messageBuffer);
+            this.blobListener = null;
+        } else {
+            const message = fromBinary(ResponseMessageSchema, messageBuffer);
+
+            for (const listener of this.messageListeners) {
+                if (listener.filter(message)) {
+                    listener.callback(message);
+                    this.messageListeners = this.messageListeners.filter((l) => l !== listener);
+                }
+            }
+        }
+        if (this.messageQueue.length > 0) {
+            this.handleNextQueueMessage();
+        }
     }
 
     public getInfo() {
@@ -54,8 +77,8 @@ export class Fixture {
     }
     public async getDefinition() {
         this.sendMessage({ command: { case: "getFixtureDefinition", value: {} } });
-        const message = await this.waitForMessageAndReturn("fixtureDefinition");
-        const json = JSON.parse(message.json);
+        const data = await this.waitForMessageAndReturn("fixtureDefinition", true);
+        const json = JSON.parse(data.blob.toString());
         return json as {
             emitters: { name: string; type: string; attributes: Record<string, { name: string; type: string }> }[];
         };
@@ -65,15 +88,21 @@ export class Fixture {
         return this.waitForMessageAndReturn("attributeValues");
     }
     public setAttributeValue(attributeId: number, value: number) {
-        this.sendMessage({ command: { case: "setAttributeValue", value: { data: { attributeId, value: { case: "floatValue", value } } } } });
+        this.sendMessage({ command: { case: "setAttributeValue", value: { data: { attributeId, value: { case: "intValue", value } } } } });
     }
 
-    private waitForMessageAndReturn<T extends ResponseMessage["response"]["case"]>(filter: T): Promise<Clean<Extract<ResponseMessage["response"], { case: T }>["value"]>> {
+    private waitForMessageAndReturn<T extends ResponseMessage["response"]["case"], B extends boolean>(filter: T, containsBlob?: B): Promise<WithoutNeverProperties<Clean<Extract<ResponseMessage["response"], { case: T }>["value"]> & { blob: B extends true ? Buffer : never }>> {
         return new Promise((resolve) => {
             this.messageListeners.push({
                 filter: (message) => message.response.case === filter,
                 callback: (message) => {
-                    resolve(this.clean(message.response.value));
+                    if (containsBlob) {
+                        this.blobListener = (buffer) => {
+                            resolve({ ...this.clean(message.response.value), blob: buffer } as any);
+                        };
+                        return;
+                    }
+                    resolve(this.clean(message.response.value) as any);
                 },
             });
         }) as any;

@@ -6,8 +6,7 @@
         "tsx": "^4.19.1"
     },
     "scripts": {
-        "start": "tsx watch src/index.ts",
-        "protobuf": "buf generate"
+        "start": "tsx watch src/index.ts"
     },
     "packageManager": "yarn@4.5.0",
     "dependencies": {

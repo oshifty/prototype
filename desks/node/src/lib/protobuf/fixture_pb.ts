@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file fixture.proto.
  */
 export const file_fixture: GenFile = /*@__PURE__*/
-  fileDesc("Cg1maXh0dXJlLnByb3RvIr8HCg5Db21tYW5kTWVzc2FnZRIzCg1zZXRXaWZpQ29uZmlnGAEgASgLMhouQ29tbWFuZE1lc3NhZ2UuV2lmaUNvbmZpZ0gAEigKB2dldEluZm8YAiABKAsyFS5Db21tYW5kTWVzc2FnZS5FbXB0eUgAEioKCWdldFN0YXR1cxgDIAEoCzIVLkNvbW1hbmRNZXNzYWdlLkVtcHR5SAASKgoJaGFuZHNoYWtlGAQgASgLMhUuQ29tbWFuZE1lc3NhZ2UuRW1wdHlIABI1ChRnZXRGaXh0dXJlRGVmaW5pdGlvbhgFIAEoCzIVLkNvbW1hbmRNZXNzYWdlLkVtcHR5SAASPgoRZ2V0QXR0cmlidXRlVmFsdWUYBiABKAsyIS5Db21tYW5kTWVzc2FnZS5HZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEmdldEF0dHJpYnV0ZVZhbHVlcxgHIAEoCzIiLkNvbW1hbmRNZXNzYWdlLkdldEF0dHJpYnV0ZVZhbHVlc0gAEjYKFWdldEFsbEF0dHJpYnV0ZVZhbHVlcxgIIAEoCzIVLkNvbW1hbmRNZXNzYWdlLkVtcHR5SAASPgoRc2V0QXR0cmlidXRlVmFsdWUYCSABKAsyIS5Db21tYW5kTWVzc2FnZS5TZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEnNldEF0dHJpYnV0ZVZhbHVlcxgKIAEoCzIiLkNvbW1hbmRNZXNzYWdlLlNldEF0dHJpYnV0ZVZhbHVlc0gAGq8BCgpXaWZpQ29uZmlnEgwKBHNzaWQYASABKAkSEAoIcGFzc3dvcmQYAiABKAkSQQoOc3RhdGljSXBDb25maWcYAyABKAsyKS5Db21tYW5kTWVzc2FnZS5XaWZpQ29uZmlnLlN0YXRpY0lwQ29uZmlnGj4KDlN0YXRpY0lwQ29uZmlnEgoKAmlwGAEgASgJEg8KB2dhdGV3YXkYAiABKAkSDwoHbmV0bWFzaxgDIAEoCRoHCgVFbXB0eRooChFHZXRBdHRyaWJ1dGVWYWx1ZRITCgthdHRyaWJ1dGVJZBgBIAEoBRoqChJHZXRBdHRyaWJ1dGVWYWx1ZXMSFAoMYXR0cmlidXRlSWRzGAEgAygFGjIKEVNldEF0dHJpYnV0ZVZhbHVlEh0KBGRhdGEYASABKAsyDy5BdHRyaWJ1dGVWYWx1ZRozChJTZXRBdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgkKB2NvbW1hbmQi3wYKD1Jlc3BvbnNlTWVzc2FnZRI/ChFzZXRDb25maWdSZXNwb25zZRgBIAEoCzIiLlJlc3BvbnNlTWVzc2FnZS5TZXRDb25maWdSZXNwb25zZUgAEi0KBGluZm8YAiABKAsyHS5SZXNwb25zZU1lc3NhZ2UuSW5mb1Jlc3BvbnNlSAASMQoGc3RhdHVzGAMgASgLMh8uUmVzcG9uc2VNZXNzYWdlLlN0YXR1c1Jlc3BvbnNlSAASNwoJaGFuZHNoYWtlGAQgASgLMiIuUmVzcG9uc2VNZXNzYWdlLkhhbmRzaGFrZVJlc3BvbnNlSAASRwoRZml4dHVyZURlZmluaXRpb24YBSABKAsyKi5SZXNwb25zZU1lc3NhZ2UuRml4dHVyZURlZmluaXRpb25SZXNwb25zZUgAEikKDmF0dHJpYnV0ZVZhbHVlGAYgASgLMg8uQXR0cmlidXRlVmFsdWVIABI7Cg9hdHRyaWJ1dGVWYWx1ZXMYByABKAsyIC5SZXNwb25zZU1lc3NhZ2UuQXR0cmlidXRlVmFsdWVzSAAaJAoRU2V0Q29uZmlnUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBqNAQoMSW5mb1Jlc3BvbnNlEhQKDG1hbnVmYWN0dXJlchgBIAEoCRINCgVtb2RlbBgCIAEoCRIUCgxzZXJpYWxOdW1iZXIYAyABKAkSIAoPZmlybXdhcmVWZXJzaW9uGAQgASgLMgcuU2VtVmVyEiAKD2hhcmR3YXJlVmVyc2lvbhgFIAEoCzIHLlNlbVZlchp6Cg5TdGF0dXNSZXNwb25zZRI6CgZzdGF0dXMYASABKA4yKi5SZXNwb25zZU1lc3NhZ2UuU3RhdHVzUmVzcG9uc2UuU3RhdHVzQ29kZSIsCgpTdGF0dXNDb2RlEgYKAk9LEAASCwoHV0FSTklORxABEgkKBUVSUk9SEAIaJAoRSGFuZHNoYWtlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBopChlGaXh0dXJlRGVmaW5pdGlvblJlc3BvbnNlEgwKBGpzb24YASABKAkaMAoPQXR0cmlidXRlVmFsdWVzEh0KBGRhdGEYASADKAsyDy5BdHRyaWJ1dGVWYWx1ZUIKCghyZXNwb25zZSJbCg5BdHRyaWJ1dGVWYWx1ZRITCgthdHRyaWJ1dGVJZBgBIAEoBRIUCgpmbG9hdFZhbHVlGAIgASgCSAASFQoLc3RyaW5nVmFsdWUYAyABKAlIAEIHCgV2YWx1ZSI1CgZTZW1WZXISDQoFbWFqb3IYASABKAUSDQoFbWlub3IYAiABKAUSDQoFcGF0Y2gYAyABKAViBnByb3RvMw");
+  fileDesc("Cg1maXh0dXJlLnByb3RvIusGCg5Db21tYW5kTWVzc2FnZRIzCg1zZXRXaWZpQ29uZmlnGAEgASgLMhouQ29tbWFuZE1lc3NhZ2UuV2lmaUNvbmZpZ0gAEhkKB2dldEluZm8YAiABKAsyBi5FbXB0eUgAEhsKCWdldFN0YXR1cxgDIAEoCzIGLkVtcHR5SAASGwoJaGFuZHNoYWtlGAQgASgLMgYuRW1wdHlIABImChRnZXRGaXh0dXJlRGVmaW5pdGlvbhgFIAEoCzIGLkVtcHR5SAASPgoRZ2V0QXR0cmlidXRlVmFsdWUYBiABKAsyIS5Db21tYW5kTWVzc2FnZS5HZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEmdldEF0dHJpYnV0ZVZhbHVlcxgHIAEoCzIiLkNvbW1hbmRNZXNzYWdlLkdldEF0dHJpYnV0ZVZhbHVlc0gAEicKFWdldEFsbEF0dHJpYnV0ZVZhbHVlcxgIIAEoCzIGLkVtcHR5SAASPgoRc2V0QXR0cmlidXRlVmFsdWUYCSABKAsyIS5Db21tYW5kTWVzc2FnZS5TZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEnNldEF0dHJpYnV0ZVZhbHVlcxgKIAEoCzIiLkNvbW1hbmRNZXNzYWdlLlNldEF0dHJpYnV0ZVZhbHVlc0gAGq8BCgpXaWZpQ29uZmlnEgwKBHNzaWQYASABKAkSEAoIcGFzc3dvcmQYAiABKAkSQQoOc3RhdGljSXBDb25maWcYAyABKAsyKS5Db21tYW5kTWVzc2FnZS5XaWZpQ29uZmlnLlN0YXRpY0lwQ29uZmlnGj4KDlN0YXRpY0lwQ29uZmlnEgoKAmlwGAEgASgJEg8KB2dhdGV3YXkYAiABKAkSDwoHbmV0bWFzaxgDIAEoCRooChFHZXRBdHRyaWJ1dGVWYWx1ZRITCgthdHRyaWJ1dGVJZBgBIAEoBRoqChJHZXRBdHRyaWJ1dGVWYWx1ZXMSFAoMYXR0cmlidXRlSWRzGAEgAygFGjIKEVNldEF0dHJpYnV0ZVZhbHVlEh0KBGRhdGEYASABKAsyDy5BdHRyaWJ1dGVWYWx1ZRozChJTZXRBdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgkKB2NvbW1hbmQipQYKD1Jlc3BvbnNlTWVzc2FnZRI/ChFzZXRDb25maWdSZXNwb25zZRgBIAEoCzIiLlJlc3BvbnNlTWVzc2FnZS5TZXRDb25maWdSZXNwb25zZUgAEi0KBGluZm8YAiABKAsyHS5SZXNwb25zZU1lc3NhZ2UuSW5mb1Jlc3BvbnNlSAASMQoGc3RhdHVzGAMgASgLMh8uUmVzcG9uc2VNZXNzYWdlLlN0YXR1c1Jlc3BvbnNlSAASNwoJaGFuZHNoYWtlGAQgASgLMiIuUmVzcG9uc2VNZXNzYWdlLkhhbmRzaGFrZVJlc3BvbnNlSAASIwoRZml4dHVyZURlZmluaXRpb24YBSABKAsyBi5FbXB0eUgAEikKDmF0dHJpYnV0ZVZhbHVlGAYgASgLMg8uQXR0cmlidXRlVmFsdWVIABI7Cg9hdHRyaWJ1dGVWYWx1ZXMYByABKAsyIC5SZXNwb25zZU1lc3NhZ2UuQXR0cmlidXRlVmFsdWVzSAAaJAoRU2V0Q29uZmlnUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBqiAQoMSW5mb1Jlc3BvbnNlEhsKDG1hbnVmYWN0dXJlchgBIAEoCUIFkj8CCEASFAoFbW9kZWwYAiABKAlCBZI/AghAEhsKDHNlcmlhbE51bWJlchgDIAEoCUIFkj8CCCASIAoPZmlybXdhcmVWZXJzaW9uGAQgASgLMgcuU2VtVmVyEiAKD2hhcmR3YXJlVmVyc2lvbhgFIAEoCzIHLlNlbVZlchp6Cg5TdGF0dXNSZXNwb25zZRI6CgZzdGF0dXMYASABKA4yKi5SZXNwb25zZU1lc3NhZ2UuU3RhdHVzUmVzcG9uc2UuU3RhdHVzQ29kZSIsCgpTdGF0dXNDb2RlEgYKAk9LEAASCwoHV0FSTklORxABEgkKBUVSUk9SEAIaJAoRSGFuZHNoYWtlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBowCg9BdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgoKCHJlc3BvbnNlImAKDkF0dHJpYnV0ZVZhbHVlEhMKC2F0dHJpYnV0ZUlkGAEgASgFEhIKCGludFZhbHVlGAIgASgFSAASHAoLc3RyaW5nVmFsdWUYAyABKAlCBZI/AgggSABCBwoFdmFsdWUiBwoFRW1wdHkiNQoGU2VtVmVyEg0KBW1ham9yGAEgASgFEg0KBW1pbm9yGAIgASgFEg0KBXBhdGNoGAMgASgFYgZwcm90bzM");
 
 /**
  * @generated from message CommandMessage
@@ -27,27 +27,27 @@ export type CommandMessage = Message<"CommandMessage"> & {
     case: "setWifiConfig";
   } | {
     /**
-     * @generated from field: CommandMessage.Empty getInfo = 2;
+     * @generated from field: Empty getInfo = 2;
      */
-    value: CommandMessage_Empty;
+    value: Empty;
     case: "getInfo";
   } | {
     /**
-     * @generated from field: CommandMessage.Empty getStatus = 3;
+     * @generated from field: Empty getStatus = 3;
      */
-    value: CommandMessage_Empty;
+    value: Empty;
     case: "getStatus";
   } | {
     /**
-     * @generated from field: CommandMessage.Empty handshake = 4;
+     * @generated from field: Empty handshake = 4;
      */
-    value: CommandMessage_Empty;
+    value: Empty;
     case: "handshake";
   } | {
     /**
-     * @generated from field: CommandMessage.Empty getFixtureDefinition = 5;
+     * @generated from field: Empty getFixtureDefinition = 5;
      */
-    value: CommandMessage_Empty;
+    value: Empty;
     case: "getFixtureDefinition";
   } | {
     /**
@@ -63,9 +63,9 @@ export type CommandMessage = Message<"CommandMessage"> & {
     case: "getAttributeValues";
   } | {
     /**
-     * @generated from field: CommandMessage.Empty getAllAttributeValues = 8;
+     * @generated from field: Empty getAllAttributeValues = 8;
      */
-    value: CommandMessage_Empty;
+    value: Empty;
     case: "getAllAttributeValues";
   } | {
     /**
@@ -144,19 +144,6 @@ export const CommandMessage_WifiConfig_StaticIpConfigSchema: GenMessage<CommandM
   messageDesc(file_fixture, 0, 0, 0);
 
 /**
- * @generated from message CommandMessage.Empty
- */
-export type CommandMessage_Empty = Message<"CommandMessage.Empty"> & {
-};
-
-/**
- * Describes the message CommandMessage.Empty.
- * Use `create(CommandMessage_EmptySchema)` to create a new message.
- */
-export const CommandMessage_EmptySchema: GenMessage<CommandMessage_Empty> = /*@__PURE__*/
-  messageDesc(file_fixture, 0, 1);
-
-/**
  * @generated from message CommandMessage.GetAttributeValue
  */
 export type CommandMessage_GetAttributeValue = Message<"CommandMessage.GetAttributeValue"> & {
@@ -171,7 +158,7 @@ export type CommandMessage_GetAttributeValue = Message<"CommandMessage.GetAttrib
  * Use `create(CommandMessage_GetAttributeValueSchema)` to create a new message.
  */
 export const CommandMessage_GetAttributeValueSchema: GenMessage<CommandMessage_GetAttributeValue> = /*@__PURE__*/
-  messageDesc(file_fixture, 0, 2);
+  messageDesc(file_fixture, 0, 1);
 
 /**
  * @generated from message CommandMessage.GetAttributeValues
@@ -188,7 +175,7 @@ export type CommandMessage_GetAttributeValues = Message<"CommandMessage.GetAttri
  * Use `create(CommandMessage_GetAttributeValuesSchema)` to create a new message.
  */
 export const CommandMessage_GetAttributeValuesSchema: GenMessage<CommandMessage_GetAttributeValues> = /*@__PURE__*/
-  messageDesc(file_fixture, 0, 3);
+  messageDesc(file_fixture, 0, 2);
 
 /**
  * @generated from message CommandMessage.SetAttributeValue
@@ -205,7 +192,7 @@ export type CommandMessage_SetAttributeValue = Message<"CommandMessage.SetAttrib
  * Use `create(CommandMessage_SetAttributeValueSchema)` to create a new message.
  */
 export const CommandMessage_SetAttributeValueSchema: GenMessage<CommandMessage_SetAttributeValue> = /*@__PURE__*/
-  messageDesc(file_fixture, 0, 4);
+  messageDesc(file_fixture, 0, 3);
 
 /**
  * @generated from message CommandMessage.SetAttributeValues
@@ -222,7 +209,7 @@ export type CommandMessage_SetAttributeValues = Message<"CommandMessage.SetAttri
  * Use `create(CommandMessage_SetAttributeValuesSchema)` to create a new message.
  */
 export const CommandMessage_SetAttributeValuesSchema: GenMessage<CommandMessage_SetAttributeValues> = /*@__PURE__*/
-  messageDesc(file_fixture, 0, 5);
+  messageDesc(file_fixture, 0, 4);
 
 /**
  * @generated from message ResponseMessage
@@ -257,9 +244,9 @@ export type ResponseMessage = Message<"ResponseMessage"> & {
     case: "handshake";
   } | {
     /**
-     * @generated from field: ResponseMessage.FixtureDefinitionResponse fixtureDefinition = 5;
+     * @generated from field: Empty fixtureDefinition = 5;
      */
-    value: ResponseMessage_FixtureDefinitionResponse;
+    value: Empty;
     case: "fixtureDefinition";
   } | {
     /**
@@ -400,23 +387,6 @@ export const ResponseMessage_HandshakeResponseSchema: GenMessage<ResponseMessage
   messageDesc(file_fixture, 1, 3);
 
 /**
- * @generated from message ResponseMessage.FixtureDefinitionResponse
- */
-export type ResponseMessage_FixtureDefinitionResponse = Message<"ResponseMessage.FixtureDefinitionResponse"> & {
-  /**
-   * @generated from field: string json = 1;
-   */
-  json: string;
-};
-
-/**
- * Describes the message ResponseMessage.FixtureDefinitionResponse.
- * Use `create(ResponseMessage_FixtureDefinitionResponseSchema)` to create a new message.
- */
-export const ResponseMessage_FixtureDefinitionResponseSchema: GenMessage<ResponseMessage_FixtureDefinitionResponse> = /*@__PURE__*/
-  messageDesc(file_fixture, 1, 4);
-
-/**
  * @generated from message ResponseMessage.AttributeValues
  */
 export type ResponseMessage_AttributeValues = Message<"ResponseMessage.AttributeValues"> & {
@@ -431,7 +401,7 @@ export type ResponseMessage_AttributeValues = Message<"ResponseMessage.Attribute
  * Use `create(ResponseMessage_AttributeValuesSchema)` to create a new message.
  */
 export const ResponseMessage_AttributeValuesSchema: GenMessage<ResponseMessage_AttributeValues> = /*@__PURE__*/
-  messageDesc(file_fixture, 1, 5);
+  messageDesc(file_fixture, 1, 4);
 
 /**
  * @generated from message AttributeValue
@@ -447,10 +417,10 @@ export type AttributeValue = Message<"AttributeValue"> & {
    */
   value: {
     /**
-     * @generated from field: float floatValue = 2;
+     * @generated from field: int32 intValue = 2;
      */
     value: number;
-    case: "floatValue";
+    case: "intValue";
   } | {
     /**
      * @generated from field: string stringValue = 3;
@@ -466,6 +436,19 @@ export type AttributeValue = Message<"AttributeValue"> & {
  */
 export const AttributeValueSchema: GenMessage<AttributeValue> = /*@__PURE__*/
   messageDesc(file_fixture, 2);
+
+/**
+ * @generated from message Empty
+ */
+export type Empty = Message<"Empty"> & {
+};
+
+/**
+ * Describes the message Empty.
+ * Use `create(EmptySchema)` to create a new message.
+ */
+export const EmptySchema: GenMessage<Empty> = /*@__PURE__*/
+  messageDesc(file_fixture, 3);
 
 /**
  * @generated from message SemVer
@@ -492,5 +475,5 @@ export type SemVer = Message<"SemVer"> & {
  * Use `create(SemVerSchema)` to create a new message.
  */
 export const SemVerSchema: GenMessage<SemVer> = /*@__PURE__*/
-  messageDesc(file_fixture, 3);
+  messageDesc(file_fixture, 4);
 
