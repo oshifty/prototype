@@ -33,6 +33,8 @@
                             </span>
                             {#if attribute.type == "boolean"}
                                 <input type="checkbox" class="toggle toggle-md" checked={!!currentValues[id]} on:change={(e) => updateAttribute(parseInt(id), e.currentTarget.checked ? 1 : 0)} />
+                            {:else if attribute.type == "int"}
+                                <input type="range" min="0" max="65535" class="" value={currentValues[id]} on:input={(e) => updateAttribute(parseInt(id), parseInt(e.currentTarget.value))} />
                             {/if}
                         </li>
                     {/each}
