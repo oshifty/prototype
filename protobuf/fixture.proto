@@ -94,7 +94,7 @@ message ResponseMessage {
 message AttributeValue {
     int32 attributeId = 1;
     oneof value {
-        float floatValue = 2;
+        int32 intValue = 2;
         string stringValue = 3 [(nanopb).max_size = 32];
     }
 }
