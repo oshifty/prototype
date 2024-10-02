@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "nanopb.proto";
-
 message CommandMessage {
     oneof command {
         WifiConfig setWifiConfig = 1;
@@ -63,9 +61,9 @@ message ResponseMessage {
     }
 
     message InfoResponse {
-        string manufacturer = 1 [(nanopb).max_size = 64];
-        string model = 2 [(nanopb).max_size = 64];
-        string serialNumber = 3 [(nanopb).max_size = 32];
+        string manufacturer = 1;
+        string model = 2;
+        string serialNumber = 3;
         SemVer firmwareVersion = 4;
         SemVer hardwareVersion = 5;
     }
@@ -95,7 +93,7 @@ message AttributeValue {
     int32 attributeId = 1;
     oneof value {
         int32 intValue = 2;
-        string stringValue = 3 [(nanopb).max_size = 32];
+        string stringValue = 3;
     }
 }
 
