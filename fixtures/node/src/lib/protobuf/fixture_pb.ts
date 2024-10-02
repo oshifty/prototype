@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file fixture.proto.
  */
 export const file_fixture: GenFile = /*@__PURE__*/
-  fileDesc("Cg1maXh0dXJlLnByb3RvIusGCg5Db21tYW5kTWVzc2FnZRIzCg1zZXRXaWZpQ29uZmlnGAEgASgLMhouQ29tbWFuZE1lc3NhZ2UuV2lmaUNvbmZpZ0gAEhkKB2dldEluZm8YAiABKAsyBi5FbXB0eUgAEhsKCWdldFN0YXR1cxgDIAEoCzIGLkVtcHR5SAASGwoJaGFuZHNoYWtlGAQgASgLMgYuRW1wdHlIABImChRnZXRGaXh0dXJlRGVmaW5pdGlvbhgFIAEoCzIGLkVtcHR5SAASPgoRZ2V0QXR0cmlidXRlVmFsdWUYBiABKAsyIS5Db21tYW5kTWVzc2FnZS5HZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEmdldEF0dHJpYnV0ZVZhbHVlcxgHIAEoCzIiLkNvbW1hbmRNZXNzYWdlLkdldEF0dHJpYnV0ZVZhbHVlc0gAEicKFWdldEFsbEF0dHJpYnV0ZVZhbHVlcxgIIAEoCzIGLkVtcHR5SAASPgoRc2V0QXR0cmlidXRlVmFsdWUYCSABKAsyIS5Db21tYW5kTWVzc2FnZS5TZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEnNldEF0dHJpYnV0ZVZhbHVlcxgKIAEoCzIiLkNvbW1hbmRNZXNzYWdlLlNldEF0dHJpYnV0ZVZhbHVlc0gAGq8BCgpXaWZpQ29uZmlnEgwKBHNzaWQYASABKAkSEAoIcGFzc3dvcmQYAiABKAkSQQoOc3RhdGljSXBDb25maWcYAyABKAsyKS5Db21tYW5kTWVzc2FnZS5XaWZpQ29uZmlnLlN0YXRpY0lwQ29uZmlnGj4KDlN0YXRpY0lwQ29uZmlnEgoKAmlwGAEgASgJEg8KB2dhdGV3YXkYAiABKAkSDwoHbmV0bWFzaxgDIAEoCRooChFHZXRBdHRyaWJ1dGVWYWx1ZRITCgthdHRyaWJ1dGVJZBgBIAEoBRoqChJHZXRBdHRyaWJ1dGVWYWx1ZXMSFAoMYXR0cmlidXRlSWRzGAEgAygFGjIKEVNldEF0dHJpYnV0ZVZhbHVlEh0KBGRhdGEYASABKAsyDy5BdHRyaWJ1dGVWYWx1ZRozChJTZXRBdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgkKB2NvbW1hbmQikAYKD1Jlc3BvbnNlTWVzc2FnZRI/ChFzZXRDb25maWdSZXNwb25zZRgBIAEoCzIiLlJlc3BvbnNlTWVzc2FnZS5TZXRDb25maWdSZXNwb25zZUgAEi0KBGluZm8YAiABKAsyHS5SZXNwb25zZU1lc3NhZ2UuSW5mb1Jlc3BvbnNlSAASMQoGc3RhdHVzGAMgASgLMh8uUmVzcG9uc2VNZXNzYWdlLlN0YXR1c1Jlc3BvbnNlSAASNwoJaGFuZHNoYWtlGAQgASgLMiIuUmVzcG9uc2VNZXNzYWdlLkhhbmRzaGFrZVJlc3BvbnNlSAASIwoRZml4dHVyZURlZmluaXRpb24YBSABKAsyBi5FbXB0eUgAEikKDmF0dHJpYnV0ZVZhbHVlGAYgASgLMg8uQXR0cmlidXRlVmFsdWVIABI7Cg9hdHRyaWJ1dGVWYWx1ZXMYByABKAsyIC5SZXNwb25zZU1lc3NhZ2UuQXR0cmlidXRlVmFsdWVzSAAaJAoRU2V0Q29uZmlnUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBqNAQoMSW5mb1Jlc3BvbnNlEhQKDG1hbnVmYWN0dXJlchgBIAEoCRINCgVtb2RlbBgCIAEoCRIUCgxzZXJpYWxOdW1iZXIYAyABKAkSIAoPZmlybXdhcmVWZXJzaW9uGAQgASgLMgcuU2VtVmVyEiAKD2hhcmR3YXJlVmVyc2lvbhgFIAEoCzIHLlNlbVZlchp6Cg5TdGF0dXNSZXNwb25zZRI6CgZzdGF0dXMYASABKA4yKi5SZXNwb25zZU1lc3NhZ2UuU3RhdHVzUmVzcG9uc2UuU3RhdHVzQ29kZSIsCgpTdGF0dXNDb2RlEgYKAk9LEAASCwoHV0FSTklORxABEgkKBUVSUk9SEAIaJAoRSGFuZHNoYWtlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBowCg9BdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgoKCHJlc3BvbnNlIlkKDkF0dHJpYnV0ZVZhbHVlEhMKC2F0dHJpYnV0ZUlkGAEgASgFEhIKCGludFZhbHVlGAIgASgFSAASFQoLc3RyaW5nVmFsdWUYAyABKAlIAEIHCgV2YWx1ZSIHCgVFbXB0eSI1CgZTZW1WZXISDQoFbWFqb3IYASABKAUSDQoFbWlub3IYAiABKAUSDQoFcGF0Y2gYAyABKAViBnByb3RvMw");
+  fileDesc("Cg1maXh0dXJlLnByb3RvIusGCg5Db21tYW5kTWVzc2FnZRIzCg1zZXRXaWZpQ29uZmlnGAEgASgLMhouQ29tbWFuZE1lc3NhZ2UuV2lmaUNvbmZpZ0gAEhkKB2dldEluZm8YAiABKAsyBi5FbXB0eUgAEhsKCWdldFN0YXR1cxgDIAEoCzIGLkVtcHR5SAASGwoJaGFuZHNoYWtlGAQgASgLMgYuRW1wdHlIABImChRnZXRGaXh0dXJlRGVmaW5pdGlvbhgFIAEoCzIGLkVtcHR5SAASPgoRZ2V0QXR0cmlidXRlVmFsdWUYBiABKAsyIS5Db21tYW5kTWVzc2FnZS5HZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEmdldEF0dHJpYnV0ZVZhbHVlcxgHIAEoCzIiLkNvbW1hbmRNZXNzYWdlLkdldEF0dHJpYnV0ZVZhbHVlc0gAEicKFWdldEFsbEF0dHJpYnV0ZVZhbHVlcxgIIAEoCzIGLkVtcHR5SAASPgoRc2V0QXR0cmlidXRlVmFsdWUYCSABKAsyIS5Db21tYW5kTWVzc2FnZS5TZXRBdHRyaWJ1dGVWYWx1ZUgAEkAKEnNldEF0dHJpYnV0ZVZhbHVlcxgKIAEoCzIiLkNvbW1hbmRNZXNzYWdlLlNldEF0dHJpYnV0ZVZhbHVlc0gAGq8BCgpXaWZpQ29uZmlnEgwKBHNzaWQYASABKAkSEAoIcGFzc3dvcmQYAiABKAkSQQoOc3RhdGljSXBDb25maWcYAyABKAsyKS5Db21tYW5kTWVzc2FnZS5XaWZpQ29uZmlnLlN0YXRpY0lwQ29uZmlnGj4KDlN0YXRpY0lwQ29uZmlnEgoKAmlwGAEgASgJEg8KB2dhdGV3YXkYAiABKAkSDwoHbmV0bWFzaxgDIAEoCRooChFHZXRBdHRyaWJ1dGVWYWx1ZRITCgthdHRyaWJ1dGVJZBgBIAEoDRoqChJHZXRBdHRyaWJ1dGVWYWx1ZXMSFAoMYXR0cmlidXRlSWRzGAEgAygNGjIKEVNldEF0dHJpYnV0ZVZhbHVlEh0KBGRhdGEYASABKAsyDy5BdHRyaWJ1dGVWYWx1ZRozChJTZXRBdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgkKB2NvbW1hbmQikAYKD1Jlc3BvbnNlTWVzc2FnZRI/ChFzZXRDb25maWdSZXNwb25zZRgBIAEoCzIiLlJlc3BvbnNlTWVzc2FnZS5TZXRDb25maWdSZXNwb25zZUgAEi0KBGluZm8YAiABKAsyHS5SZXNwb25zZU1lc3NhZ2UuSW5mb1Jlc3BvbnNlSAASMQoGc3RhdHVzGAMgASgLMh8uUmVzcG9uc2VNZXNzYWdlLlN0YXR1c1Jlc3BvbnNlSAASNwoJaGFuZHNoYWtlGAQgASgLMiIuUmVzcG9uc2VNZXNzYWdlLkhhbmRzaGFrZVJlc3BvbnNlSAASIwoRZml4dHVyZURlZmluaXRpb24YBSABKAsyBi5FbXB0eUgAEikKDmF0dHJpYnV0ZVZhbHVlGAYgASgLMg8uQXR0cmlidXRlVmFsdWVIABI7Cg9hdHRyaWJ1dGVWYWx1ZXMYByABKAsyIC5SZXNwb25zZU1lc3NhZ2UuQXR0cmlidXRlVmFsdWVzSAAaJAoRU2V0Q29uZmlnUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBqNAQoMSW5mb1Jlc3BvbnNlEhQKDG1hbnVmYWN0dXJlchgBIAEoCRINCgVtb2RlbBgCIAEoCRIUCgxzZXJpYWxOdW1iZXIYAyABKAkSIAoPZmlybXdhcmVWZXJzaW9uGAQgASgLMgcuU2VtVmVyEiAKD2hhcmR3YXJlVmVyc2lvbhgFIAEoCzIHLlNlbVZlchp6Cg5TdGF0dXNSZXNwb25zZRI6CgZzdGF0dXMYASABKA4yKi5SZXNwb25zZU1lc3NhZ2UuU3RhdHVzUmVzcG9uc2UuU3RhdHVzQ29kZSIsCgpTdGF0dXNDb2RlEgYKAk9LEAASCwoHV0FSTklORxABEgkKBUVSUk9SEAIaJAoRSGFuZHNoYWtlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBowCg9BdHRyaWJ1dGVWYWx1ZXMSHQoEZGF0YRgBIAMoCzIPLkF0dHJpYnV0ZVZhbHVlQgoKCHJlc3BvbnNlIlkKDkF0dHJpYnV0ZVZhbHVlEhMKC2F0dHJpYnV0ZUlkGAEgASgNEhIKCGludFZhbHVlGAIgASgNSAASFQoLc3RyaW5nVmFsdWUYAyABKAlIAEIHCgV2YWx1ZSIHCgVFbXB0eSI1CgZTZW1WZXISDQoFbWFqb3IYASABKA0SDQoFbWlub3IYAiABKA0SDQoFcGF0Y2gYAyABKA1iBnByb3RvMw");
 
 /**
  * @generated from message CommandMessage
@@ -148,7 +148,7 @@ export const CommandMessage_WifiConfig_StaticIpConfigSchema: GenMessage<CommandM
  */
 export type CommandMessage_GetAttributeValue = Message<"CommandMessage.GetAttributeValue"> & {
   /**
-   * @generated from field: int32 attributeId = 1;
+   * @generated from field: uint32 attributeId = 1;
    */
   attributeId: number;
 };
@@ -165,7 +165,7 @@ export const CommandMessage_GetAttributeValueSchema: GenMessage<CommandMessage_G
  */
 export type CommandMessage_GetAttributeValues = Message<"CommandMessage.GetAttributeValues"> & {
   /**
-   * @generated from field: repeated int32 attributeIds = 1;
+   * @generated from field: repeated uint32 attributeIds = 1;
    */
   attributeIds: number[];
 };
@@ -408,7 +408,7 @@ export const ResponseMessage_AttributeValuesSchema: GenMessage<ResponseMessage_A
  */
 export type AttributeValue = Message<"AttributeValue"> & {
   /**
-   * @generated from field: int32 attributeId = 1;
+   * @generated from field: uint32 attributeId = 1;
    */
   attributeId: number;
 
@@ -417,7 +417,7 @@ export type AttributeValue = Message<"AttributeValue"> & {
    */
   value: {
     /**
-     * @generated from field: int32 intValue = 2;
+     * @generated from field: uint32 intValue = 2;
      */
     value: number;
     case: "intValue";
@@ -455,17 +455,17 @@ export const EmptySchema: GenMessage<Empty> = /*@__PURE__*/
  */
 export type SemVer = Message<"SemVer"> & {
   /**
-   * @generated from field: int32 major = 1;
+   * @generated from field: uint32 major = 1;
    */
   major: number;
 
   /**
-   * @generated from field: int32 minor = 2;
+   * @generated from field: uint32 minor = 2;
    */
   minor: number;
 
   /**
-   * @generated from field: int32 patch = 3;
+   * @generated from field: uint32 patch = 3;
    */
   patch: number;
 };

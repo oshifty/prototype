@@ -50,6 +50,13 @@ server.listen(TCP_PORT);
 console.log("✅ Ready");
 
 let lampShutterOpen = false;
+let lampBrightness = 0;
+
+// const map = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+// const mapToInt32 = (value: number, inMin: number, inMax: number) => Math.round(map(value, inMin, inMax, -2147483648, 2147483647));
+// const mapFromInt32 = (value: number, inMin: number, inMax) => map(value, -2147483648, 2147483647, inMin, inMax);
+// const percentToInt32 = (value: number) => mapToInt32(value, 0, 100);
+// const percentFromInt32 = (value: number) => mapFromInt32(value, 0, 100);
 
 async function handleMessag(message: CommandMessage, client: net.Socket) {
     switch (message.command.case) {
@@ -86,6 +93,7 @@ async function handleMessag(message: CommandMessage, client: net.Socket) {
                             type: "light",
                             attributes: {
                                 1: { name: "Shutter", type: "boolean" },
+                                2: { name: "Brightness", type: "int" },
                             },
                         },
                     ],
@@ -99,7 +107,10 @@ async function handleMessag(message: CommandMessage, client: net.Socket) {
                 response: {
                     case: "attributeValues",
                     value: {
-                        data: [{ attributeId: 1, value: { case: "intValue", value: lampShutterOpen ? 1 : 0 } }],
+                        data: [
+                            { attributeId: 1, value: { case: "intValue", value: lampShutterOpen ? 1 : 0 } },
+                            { attributeId: 2, value: { case: "intValue", value: lampBrightness } },
+                        ],
                     },
                 },
             });
@@ -115,12 +126,25 @@ async function handleMessag(message: CommandMessage, client: net.Socket) {
                         },
                     },
                 });
+            } else if (message.command.value.attributeId === 2) {
+                sendMessage(client, {
+                    response: {
+                        case: "attributeValue",
+                        value: {
+                            attributeId: 2,
+                            value: { case: "intValue", value: lampBrightness },
+                        },
+                    },
+                });
             }
             break;
         case "setAttributeValue":
             if (message.command.value.data?.attributeId === 1 && message.command.value.data.value.case === "intValue") {
                 lampShutterOpen = message.command.value.data.value.value === 1;
                 console.log("Lamp shutter is now", lampShutterOpen ? "open 🌞" : "closed 🌚");
+            } else if (message.command.value.data?.attributeId === 2 && message.command.value.data.value.case === "intValue") {
+                lampBrightness = message.command.value.data.value.value;
+                console.log("Lamp brightness is now", lampBrightness);
             }
             break;
         default:
