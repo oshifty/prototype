@@ -1,0 +1,5 @@
+ResponseMessage.InfoResponse.manufacturer   max_size:64
+ResponseMessage.InfoResponse.model          max_size:64
+ResponseMessage.InfoResponse.serialNumber   max_size:32
+
+AttributeValue.stringValue                  max_size:32
