@@ -1,6 +1,6 @@
 version: v2
 inputs:
-    - directory: ../../protobuf
+    - proto_file: ../../protobuf/fixture.proto
 plugins:
     - local: protoc-gen-es
       opt: target=ts
