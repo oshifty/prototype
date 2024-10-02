@@ -29,12 +29,14 @@ export class Fixture {
         let dataBuffer = Buffer.alloc(0) as any;
         this.client.on("data", (data) => {
             dataBuffer = Buffer.concat([dataBuffer, data]);
-            while (dataBuffer.length >= 4) {
+            while (dataBuffer.length > 4) {
                 const length = dataBuffer.readUInt32LE(0);
                 if (dataBuffer.length >= length + 4) {
                     const protobuf = dataBuffer.subarray(4, 4 + length);
                     dataBuffer = dataBuffer.subarray(4 + length);
                     this.messageQueue.push(protobuf);
+                } else {
+                    break;
                 }
             }
             this.handleNextQueueMessage();
