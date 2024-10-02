@@ -30,9 +30,6 @@ message CommandMessage {
         }
     }
 
-    message Empty {
-    }
-
     message GetAttributeValue {
         int32 attributeId = 1;
     }
@@ -56,7 +53,7 @@ message ResponseMessage {
         InfoResponse info = 2;
         StatusResponse status = 3;
         HandshakeResponse handshake = 4;
-        Blob fixtureDefinition = 5;
+        Empty fixtureDefinition = 5;
         AttributeValue attributeValue = 6;
         AttributeValues attributeValues = 7;
     }
@@ -89,10 +86,6 @@ message ResponseMessage {
         bool success = 1;
     }
 
-    message Blob {
-        int32 length = 1;
-    }
-
     message AttributeValues {
         repeated AttributeValue data = 1;
     }
@@ -104,6 +97,9 @@ message AttributeValue {
         float floatValue = 2;
         string stringValue = 3 [(nanopb).max_size = 32];
     }
+}
+
+message Empty {
 }
 
 message SemVer {
